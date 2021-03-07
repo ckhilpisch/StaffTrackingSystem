@@ -5,18 +5,8 @@
 
     },
     {
-        "title" : "Inside Sales",
-        "salary" : 51260
-        
-    },
-    {
         "title" : "Account Sales Manager",
         "salary" : 62236
-        
-    },
-    {
-        "title" : "Advertising Coordinator",
-        "salary" : 47402
         
     },
     {
@@ -42,11 +32,6 @@
     {
         "title" : "Chief Technology Officer",
         "salary" : 163025
-        
-    },
-    {
-        "title" : "Legal Assistant",
-        "salary" : 43755
         
     },
     {
