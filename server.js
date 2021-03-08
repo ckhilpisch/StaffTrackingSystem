@@ -1,8 +1,8 @@
-const conncection = require('./config/connection');
+const connection = require('./config/connection');
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 
-function startApp() {
+ const startApp = () => {
   inquirer
     .prompt({
       type: 'list',
@@ -11,21 +11,27 @@ function startApp() {
       choices: ['View all Employees', 'View all Employees by Department', 'Add an Employee', 'Remove an Employee', 'Update an Employee Role', 'Update an Employee Manager']
     }
   )
-    .then(function(answer) {
-      if (answer.general == 'View all Employees') {
+    .then((answer) => {
+      switch (answer.general) {
+        case 'View all Employees':
         viewEmployees();
-      } else if (answer.general == 'View all Employees by Department') {
+        break;
+        case 'View all Employees by Department':
         viewByDept();
-      } else if (answer.general == 'Add an Employee') {
+        case 'Add an Employee':
         addEmployee();
-      } else if (answer.general == 'Remove an Employee') {
+        break;
+        case 'Remove an Employee':
         removeEmployee();
-      } else if (answer.general == 'Update an Employee Role') {
+        break;
+        case 'Update an Employee Role':
         updateRole();
-      } else if (answer.general == 'Update an Employee Manager') {
+        break;
+        case 'Update an Employee Manager':
         updateManager();
-      };
-    })
-}
+      }
+    });
+  // startApp();
+};
 
 startApp();

@@ -8,5 +8,9 @@ const connection = mysql.createConnection({
   password: process.env.DB_PASSWORD,
   database: DB_NAME=employeetracker_db
 });
+connection.connect((err) => {
+  if (err) throw err;
+  // runSearch();
+});
 
 module.exports = connection;
