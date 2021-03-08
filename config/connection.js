@@ -1,14 +1,12 @@
-var mysql = require("mysql");
+const mysql = require("mysql");
+require('dotenv').config();
 
-var connection = mysql.createConnection({
+const connection = mysql.createConnection({
   host: "localhost",
   port: 3306,
-  user: "root",
-  password: "Kathryn@1977",
-  database: "employeetracker_db",
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: DB_NAME=employeetracker_db
 });
 
-connection.connect(function (err) {
-  if (err) throw err;
-  console.log("connected as id " + connection.threadId);
-});
+module.exports = connection;
