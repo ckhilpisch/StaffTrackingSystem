@@ -1,7 +1,11 @@
 const connection = require('./config/connection');
 const mysql = require("mysql");
 const inquirer = require("inquirer");
-
+const util = require('util');
+connection.query = util.promisify(connection.query);
+const Department = require('./models/department');
+const Employee = require('./models/employee');
+const Role = require('./models/role')
 
 
  const startApp = () => {
@@ -27,8 +31,8 @@ const inquirer = require("inquirer");
         case 'Add an Employee':
         addEmployee();
         break;
-        // case 'Update an Employee':
-        // updateEmployee();
+        case 'Update an Employee':
+        updateEmployee();
         // break;
         // case 'Remove an Employee':
         // removeEmployee();
@@ -63,61 +67,76 @@ const inquirer = require("inquirer");
 
 startApp();
 
-const viewEmployees = () => {
-  let sql =
-    "SELECT * FROM employeetracker_db.employee";
-  connection.query(sql, function (err, res) {
-    if (err) {
-      console.log("Error viewing Employee table");
-    }
-    if (res) {
-      console.table(res);
-    }
-    startApp();
-  });
+const viewEmployees = async () => {
+  await Employee.getAll();
+  startApp();
+
+  // let sql =
+  //   "SELECT * FROM employeetracker_db.employee";
+  // connection.query(sql, function (err, res) {
+  //   if (err) {
+  //     console.log("Error viewing Employee table");
+  //   }
+  //   if (res) {
+  //     console.table(res);
+  //   }
+  //   startApp();
+  // });
   
 };
-const viewDept = () => {
-  let sql =
-    "SELECT * FROM employeetracker_db.department";
-  connection.query(sql, function (err, res) {
-    if (err) {
-      console.log("Error viewing department table");
-    }
-    if (res) {
-      console.table(res);
-    }
-    startApp();
-  });
+const viewDept = async () => {
+  await Department.getAll();
+  startApp();
+
+
+  
+  // let sql =
+  //   "SELECT * FROM employeetracker_db.department";
+  // connection.query(sql, function (err, res) {
+  //   if (err) {
+  //     console.log("Error viewing department table");
+  //   }
+  //   if (res) {
+  //     console.table(res);
+  //   }
+  //   startApp();
+  // });
   
 };
-const viewRoles = () => {
-  let sql =
-    "SELECT * FROM employeetracker_db.role";
-  connection.query(sql, function (err, res) {
-    if (err) {
-      console.log("Error viewing Employee table");
-    }
-    if (res) {
-      console.table(res);
-    }
-    startApp();
-  });
+
+const viewRoles = async () => {
+  await Role.getAll();
+  startApp();
+  // let sql =
+  //   "SELECT * FROM employeetracker_db.role";
+  // connection.query(sql, function (err, res) {
+  //   if (err) {
+  //     console.log("Error viewing Employee table");
+  //   }
+  //   if (res) {
+  //     console.table(res);
+  //   }
+    
+  // });
   
-}
+};
+
 const addEmployee = async () => {
   function createArray() { 
     let sql =
-    "SELECT title FROM employeetracker_db.role";
-  connection.query(sql, function (err, res) {
-    if (err) throw err;
-    if (res) {
-      let deptArray = res;
-      return deptArray;
-    }
-  });
+    "SELECT title, id FROM employeetracker_db.role";
+    return connection.query(sql);
   };
-  await createArray();
+  const roleArray = await createArray();
+  let newRoleArray = [];
+  for (let i = 0; i < roleArray.length; i++) {
+    newRoleArray.push({ 
+      name : roleArray[i].title,
+      value : roleArray[i].id
+    })
+  }
+
+
   inquirer
   .prompt([
     {
@@ -134,53 +153,86 @@ const addEmployee = async () => {
     name: 'newRole',
     type: 'list',
     message: 'What is the employees role?',
-    choices: deptArray
+    choices: newRoleArray
     },
   ]).then((answer) => {
     console.log(answer);
+
     startApp();
   })
   
 };
 
-// const viewDept = () => {
-//   inquirer
-//     .prompt({
-//       name: 'department',
-//       type: 'list',
-//       message: 'Which department would you like to see?',
-//       choices: ['Sales', 'Marketing', 'Engineering', 'Legal', 'Accounting']
-//     }).then((answer) => {
-//       switch (answer.department) {
-//         case 'Sales':
-//         viewSales();
-//         break;
-//         case 'Marketing':
-//         viewMarketing();
-//         break;
-//         case 'Engineering':
-//         viewEngineering();
-//         break;
-//         case 'Legal':
-//         viewLegal();
-//         break;
-//         case 'Accounting':
-//         viewAccounting();
-//         break;
-//       }
-//       const query = 'SELECT name FROM department WHERE ? JOIN role ON department.id = department_id JOIN employee ON role.id = role_id';
-//       connection.query(query, { name: answer.department }, (err, res) => {
-//         if (err) {
-//           console.log("Error viewing Employee table by Department");
-//         }
-//         if (res) {
-//           console.table(res);
-//         }
-//         startApp();
-        
-//         });
-        
-//     });
-// };
+const updateEmployee = async () => {
+  function createArray() { 
+    let sql =
+    "SELECT first_name, last_name, id FROM employeetracker_db.employee";
+    return connection.query(sql);
+  };
+  const employArray = await createArray();
+  console.log (employArray);
+  // let newEmployArray = [];
+  // for (let i = 0; i < employArray.length; i++) {
+  //   newEmployArray.push({ 
+  //     name : employArray[i].firstname,
+  //     lastname: employArray[i].lastname,
+  //     value : employArray[i].id
+  //   })
+  // }
 
 
+  // inquirer
+  // .prompt([
+  //   {
+  //   name: 'fName',
+  //   type: 'input',
+  //   message: 'What is the employees first name?'
+  //   },
+  //   {
+  //   name: 'lName',
+  //   type: 'input',
+  //   message: 'What is the employees last name?'
+  //   },
+  //   {
+  //   type: 'list',
+  //   message: 'What would you like to update?',
+  //   name: 'update',
+  //   choices: ['First name', 'Last name', 'Role']
+    
+  // ]).then((answer) => {
+  //   console.log(answer);
+    
+    startApp();
+  };
+
+  const deleteEmployee = async () => {
+    function createArray() { 
+      let sql =
+      "SELECT first_name, last_name, id FROM employeetracker_db.employee";
+      return connection.query(sql);
+    };
+    const employArray = await createArray();
+    console.log (employArray);
+  }
+  //   inquirer
+  // .prompt([
+  //   {
+  //   name: 'fName',
+  //   type: 'input',
+  //   message: 'What is the employees first name?',
+  //   default: 'Casey'
+  //   },
+  //   {
+  //   name: 'lName',
+  //   type: 'input',
+  //   message: 'What is the employees last name?',
+  //   default: 'Jones'
+  //   },
+  //   {
+  //   name: 'delete',
+  //   type: 'confirm',
+  //   message: 'Are you sure you would like to delete?',
+  //   default: true
+  //   }
+
+  // ]).then(answers)
