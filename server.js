@@ -9,7 +9,7 @@ let deptArray = []
       type: 'list',
       message: 'What would you like to do?',
       name: 'general',
-      choices: ['View Employees', 'View Departments','View Roles', 'Add an Employee', 'Update an Employee','RemoRoleve an Employee','Add an Role', 'Update a Role','Remove a Role', 'Add a Department', 'Update a Depatment','Remove a Department','View Employees by Manager', 'Update an Employee Manager']
+      choices: ['View Employees', 'View Departments','View Roles', 'Add an Employee', 'Update an Employee','Remove an Employee','Add an Role', 'Update a Role','Remove a Role', 'Add a Department', 'Update a Depatment','Remove a Department','View Employees by Manager', 'Update an Employee Manager']
     }
   )
     .then((answer) => {
@@ -23,9 +23,9 @@ let deptArray = []
         case 'View Roles':
         viewRoles();
         break;
-        // case 'Add an Employee':
-        // addEmployee();
-        // break;
+        case 'Add an Employee':
+        addEmployee();
+        break;
         // case 'Update an Employee':
         // updateEmployee();
         // break;
@@ -66,8 +66,6 @@ const viewEmployees = () => {
   let sql =
     "SELECT * FROM employeetracker_db.employee";
   connection.query(sql, function (err, res) {
-    console.log(res);
-  
     if (err) {
       console.log("Error viewing Employee table");
     }
@@ -82,8 +80,6 @@ const viewDept = () => {
   let sql =
     "SELECT * FROM employeetracker_db.department";
   connection.query(sql, function (err, res) {
-    console.log(res);
-  
     if (err) {
       console.log("Error viewing department table");
     }
@@ -98,8 +94,6 @@ const viewRoles = () => {
   let sql =
     "SELECT * FROM employeetracker_db.role";
   connection.query(sql, function (err, res) {
-    console.log(res);
-  
     if (err) {
       console.log("Error viewing Employee table");
     }
@@ -110,7 +104,30 @@ const viewRoles = () => {
   });
   
 }
-
+const addEmployee = async () => {
+  inquirer
+  .prompt({
+    name: 'fName',
+    type: 'input',
+    message: 'What is the employees first name?'
+  },
+  {
+    name: 'lName',
+    type: 'input',
+    message: 'What is the employees last name?'
+  },
+  {  
+    name: 'newRole',
+    type: 'list',
+    message: 'What is the employees role?',
+    choices: ["Social Media Manager", "Digital Marketing Director", "Sales Support", "Account Sales Manager", "Junior Software Developer", "Senior Software Developer", "Chief Technology Officer", "Legal Analyst", "Legal Director", "General Accountant", "Accounting Supervisor"]
+  },
+  ).then((answer) => {
+    console.log(answer);
+    startApp();
+  })
+  
+};
 
 // const viewDept = () => {
 //   inquirer
