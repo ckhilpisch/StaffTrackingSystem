@@ -1,7 +1,8 @@
 const connection = require('./config/connection');
 const mysql = require("mysql");
 const inquirer = require("inquirer");
-let deptArray = []
+
+
 
  const startApp = () => {
   inquirer
@@ -105,24 +106,37 @@ const viewRoles = () => {
   
 }
 const addEmployee = async () => {
+  function createArray() { 
+    let sql =
+    "SELECT title FROM employeetracker_db.role";
+  connection.query(sql, function (err, res) {
+    if (err) throw err;
+    if (res) {
+      let deptArray = res;
+      return deptArray;
+    }
+  });
+  };
+  await createArray();
   inquirer
-  .prompt({
+  .prompt([
+    {
     name: 'fName',
     type: 'input',
     message: 'What is the employees first name?'
-  },
-  {
+    },
+    {
     name: 'lName',
     type: 'input',
     message: 'What is the employees last name?'
-  },
-  {  
+    },
+    {  
     name: 'newRole',
     type: 'list',
     message: 'What is the employees role?',
-    choices: ["Social Media Manager", "Digital Marketing Director", "Sales Support", "Account Sales Manager", "Junior Software Developer", "Senior Software Developer", "Chief Technology Officer", "Legal Analyst", "Legal Director", "General Accountant", "Accounting Supervisor"]
-  },
-  ).then((answer) => {
+    choices: deptArray
+    },
+  ]).then((answer) => {
     console.log(answer);
     startApp();
   })
