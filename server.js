@@ -1,6 +1,7 @@
 const connection = require('./config/connection');
 const mysql = require("mysql");
 const inquirer = require("inquirer");
+let deptArray = []
 
  const startApp = () => {
   inquirer
@@ -8,27 +9,53 @@ const inquirer = require("inquirer");
       type: 'list',
       message: 'What would you like to do?',
       name: 'general',
-      choices: ['View all Employees', 'View all Employees by Department', 'Add an Employee', 'Remove an Employee', 'Update an Employee Role', 'Update an Employee Manager']
+      choices: ['View Employees', 'View Departments','View Roles', 'Add an Employee', 'Update an Employee','RemoRoleve an Employee','Add an Role', 'Update a Role','Remove a Role', 'Add a Department', 'Update a Depatment','Remove a Department','View Employees by Manager', 'Update an Employee Manager']
     }
   )
     .then((answer) => {
       switch (answer.general) {
-        case 'View all Employees':
+        case 'View Employees':
         viewEmployees();
         break;
-        case 'View all Employees by Department':
-        viewByDept();
-        case 'Add an Employee':
-        addEmployee();
+        case 'View Departments':
+        viewDept();
         break;
-        case 'Remove an Employee':
-        removeEmployee();
+        case 'View Roles':
+        viewRoles();
         break;
-        case 'Update an Employee Role':
-        updateRole();
-        break;
-        case 'Update an Employee Manager':
-        updateManager();
+        // case 'Add an Employee':
+        // addEmployee();
+        // break;
+        // case 'Update an Employee':
+        // updateEmployee();
+        // break;
+        // case 'Remove an Employee':
+        // removeEmployee();
+        // break;
+        // case 'Add a Role':
+        // addRole();
+        // break;
+        // case 'Update a Role':
+        // updateRole();
+        // break;
+        // case 'Remove a Role':
+        // removeRole();
+        // break;
+        // case 'Add an Department':
+        // addDept();
+        // break;
+        // case 'Update an Department':
+        // updateDept();
+        // break;
+        // case 'Remove an Department':
+        // removeDept();
+        // break;
+        // case 'View Employees by Manager':
+        // viewManager();
+        // break;
+        // case 'Update an Employee Manager':
+        // updateManager();
+        // break;
       }
     });
 };
@@ -37,8 +64,42 @@ startApp();
 
 const viewEmployees = () => {
   let sql =
-    "SELECT * FROM employeetracker_db.employee LEFT JOIN role on role.id = employee.role_id";
+    "SELECT * FROM employeetracker_db.employee";
   connection.query(sql, function (err, res) {
+    console.log(res);
+  
+    if (err) {
+      console.log("Error viewing Employee table");
+    }
+    if (res) {
+      console.table(res);
+    }
+    startApp();
+  });
+  
+};
+const viewDept = () => {
+  let sql =
+    "SELECT * FROM employeetracker_db.department";
+  connection.query(sql, function (err, res) {
+    console.log(res);
+  
+    if (err) {
+      console.log("Error viewing department table");
+    }
+    if (res) {
+      console.table(res);
+    }
+    startApp();
+  });
+  
+};
+const viewRoles = () => {
+  let sql =
+    "SELECT * FROM employeetracker_db.role";
+  connection.query(sql, function (err, res) {
+    console.log(res);
+  
     if (err) {
       console.log("Error viewing Employee table");
     }
@@ -51,7 +112,7 @@ const viewEmployees = () => {
 }
 
 
-// const viewByDept = () => {
+// const viewDept = () => {
 //   inquirer
 //     .prompt({
 //       name: 'department',
@@ -61,27 +122,34 @@ const viewEmployees = () => {
 //     }).then((answer) => {
 //       switch (answer.department) {
 //         case 'Sales':
-//         id=1;
+//         viewSales();
 //         break;
 //         case 'Marketing':
-//         id=2;
+//         viewMarketing();
+//         break;
 //         case 'Engineering':
-//         id=3;
+//         viewEngineering();
 //         break;
 //         case 'Legal':
-//         id=4;
+//         viewLegal();
 //         break;
 //         case 'Accounting':
-//         id=5;
+//         viewAccounting();
 //         break;
 //       }
 //       const query = 'SELECT name FROM department WHERE ? JOIN role ON department.id = department_id JOIN employee ON role.id = role_id';
-//       connection.query(query, { department: answer.department }, (err, res) => {
+//       connection.query(query, { name: answer.department }, (err, res) => {
+//         if (err) {
+//           console.log("Error viewing Employee table by Department");
+//         }
+//         if (res) {
+//           console.table(res);
+//         }
+//         startApp();
         
 //         });
-//         runSearch();
-//       });
+        
 //     });
-
 // };
+
 
