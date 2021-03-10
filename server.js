@@ -23,7 +23,7 @@ const startApp = () => {
         "Add an Employee",
         "Update an Employee",
         "Remove an Employee",
-        "Add an Role",
+        "Add a Role",
         "Update a Role",
         "Remove a Role",
         "Add a Department",
@@ -53,9 +53,9 @@ const startApp = () => {
         case 'Remove an Employee':
         removeEmployee();
         break;
-        // case 'Add a Role':
-        // addRole();
-        // break;
+        case 'Add a Role':
+        addRole();
+        break;
         // case 'Update a Role':
         // updateRole();
         // break;
@@ -250,4 +250,50 @@ const removeEmployee = async () => {
 
     });
 };
+
+const addRole = async () => {
+  const role = await Role.getAllUpdated();
+  let newRoleArray = [];
+  for (let i = 0; i < role.length; i++) {
+    newRoleArray.push({
+      name: role[i].title,
+      value: role[i].id,
+    });
     
+  }
+  console.log(newRoleArray)
+
+  const department = await Department.getAll();
+  let newDeptArray = [];
+  for (let i = 0; i < department.length; i++) {
+    newDeptArray.push({
+      name: department[i].name,
+      value: department[i].id,
+    });
+  }
+  console.log(newDeptArray);
+  inquirer
+    .prompt([
+      {
+        name: "newRole",
+        type: "input",
+        message: "What is the title of the new role?",
+      },
+      {
+        name: "newSalary",
+        type: "number",
+        message: "What is the salary of the new role?",
+      },
+      {
+        name: "newDepart",
+        type: "list",
+        message: "What is the department of the new role?",
+        choices: newDeptArray,
+      },
+    ])
+    .then((answer) => {
+      console.log(answer);
+
+      startApp();
+    });
+};

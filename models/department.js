@@ -4,7 +4,7 @@ const Department = function(department) {
   this.name = deparment.name;
 };
 
-Department.getAll =( ) => {
+Department.getAll =() => {
     return sql.query("SELECT * FROM employeetracker_db.department")
 };
 
