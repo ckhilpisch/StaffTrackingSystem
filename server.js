@@ -27,7 +27,6 @@ const startApp = () => {
         "Update a Role",
         "Remove a Role",
         "Add a Department",
-        "Update a Depatment",
         "Remove a Department",
         "View Employees by Manager",
         "Update an Employee Manager",
@@ -62,21 +61,18 @@ const startApp = () => {
         case 'Remove a Role':
         removeRole();
         break;
-        // case 'Add an Department':
-        // addDept();
-        // break;
-        // case 'Update an Department':
-        // updateDept();
-        // break;
-        // case 'Remove an Department':
-        // removeDept();
-        // break;
-        // case 'View Employees by Manager':
-        // viewManager();
-        // break;
-        // case 'Update an Employee Manager':
-        // updateManager();
-        // break;
+        case 'Add a Department':
+        addDept();
+        break;
+        case 'Remove a Department':
+        removeDept();
+        break;
+        case 'View Employees by Manager':
+        viewManager();
+        break;
+        case 'Update an Employee Manager':
+        updateManager();
+        break;
       }
     });
 };
@@ -391,3 +387,55 @@ const removeRole= async () => {
 
     });
 };
+const addDept = async () => {
+  const department = await Department.getAll();
+  let newDeptArray = [];
+  for (let i = 0; i < department.length; i++) {
+    newDeptArray.push({
+      name: department[i].name,
+      value: department[i].id,
+    });
+  }
+  console.log(newDeptArray);
+
+  inquirer
+    .prompt([
+      {
+        name: "newDept",
+        type: "input",
+        message: "What is the title of the new department?",
+      },
+    ])
+    .then((answer) => {
+      console.log(answer);
+
+      startApp();
+    });
+};
+
+const removeDept= async () => {
+  const department = await Department.getAll();
+  let newDeptArray = [];
+  for (let i = 0; i < department.length; i++) {
+    newDeptArray.push({
+      name: department[i].name,
+      value: department[i].id,
+    });
+  }
+  inquirer
+    .prompt([
+      {
+        name: "deleteDept",
+        type: "list",
+        message: "Which department would you like to delete?",
+        choices: newDeptArray
+      },
+    ]).then((answer) => {
+      console.log(answer);
+
+      startApp();
+
+    });
+};
+
+
