@@ -56,9 +56,9 @@ const startApp = () => {
         case 'Add a Role':
         addRole();
         break;
-        // case 'Update a Role':
-        // updateRole();
-        // break;
+        case 'Update a Role':
+        updateRole();
+        break;
         // case 'Remove a Role':
         // removeRole();
         // break;
@@ -288,6 +288,74 @@ const addRole = async () => {
         name: "newDepart",
         type: "list",
         message: "What is the department of the new role?",
+        choices: newDeptArray,
+      },
+    ])
+    .then((answer) => {
+      console.log(answer);
+
+      startApp();
+    });
+};
+
+const updateRole = async () => {
+  const role = await Role.getAllUpdated();
+  let newRoleArray = [];
+  for (let i = 0; i < role.length; i++) {
+    newRoleArray.push({
+      name: role[i].title,
+      value: role[i].id,
+    });
+    
+  }
+  console.log(newRoleArray)
+
+  const department = await Department.getAll();
+  let newDeptArray = [];
+  for (let i = 0; i < department.length; i++) {
+    newDeptArray.push({
+      name: department[i].name,
+      value: department[i].id,
+    });
+  }
+  console.log(newDeptArray);
+  inquirer
+    .prompt([
+      {
+        name: "updateRole",
+        type: "list",
+        message: "Which role would you like to update?",
+        choices: newRoleArray
+      },
+      {
+        name: "updateItem",
+        type: "list",
+        message: "What would you like to update?",
+        choices: ["Role Name", "Salary", "Department"]
+      },
+      {
+        name: "newRoleName",
+        type: "input",
+        when: function (answer) {
+          return answer.updateItem == "Role Name";
+        },
+        message: "What is the new name of the role?",
+      },
+      {
+        name: "newSalaryt",
+        type: "number",
+        when: function (answer) {
+          return answer.updateItem == "Salary";
+        },
+        message: "What is the new salary for this role?",
+      },
+      {
+        name: "newDept",
+        type: "list",
+        when: function (answer) {
+          return answer.updateItem == "Department";
+        },
+        message: "What is this role's new department?",
         choices: newDeptArray,
       },
     ])
