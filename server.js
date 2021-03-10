@@ -59,9 +59,9 @@ const startApp = () => {
         case 'Update a Role':
         updateRole();
         break;
-        // case 'Remove a Role':
-        // removeRole();
-        // break;
+        case 'Remove a Role':
+        removeRole();
+        break;
         // case 'Add an Department':
         // addDept();
         // break;
@@ -363,5 +363,31 @@ const updateRole = async () => {
       console.log(answer);
 
       startApp();
+    });
+};
+
+const removeRole= async () => {
+  const role = await Role.getAllUpdated();
+  let newRoleArray = [];
+  for (let i = 0; i < role.length; i++) {
+    newRoleArray.push({
+      name: role[i].title,
+      value: role[i].id,
+    });
+    
+  }
+  inquirer
+    .prompt([
+      {
+        name: "deleteRole",
+        type: "list",
+        message: "Which role would you like to delete?",
+        choices: newRoleArray
+      },
+    ]).then((answer) => {
+      console.log(answer);
+
+      startApp();
+
     });
 };
