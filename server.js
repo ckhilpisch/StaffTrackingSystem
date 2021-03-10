@@ -49,10 +49,10 @@ const startApp = () => {
           break;
         case "Update an Employee":
           updateEmployee();
-        // break;
-        // case 'Remove an Employee':
-        // removeEmployee();
-        // break;
+        break;
+        case 'Remove an Employee':
+        removeEmployee();
+        break;
         // case 'Add a Role':
         // addRole();
         // break;
@@ -224,3 +224,30 @@ const updateEmployee = async () => {
       startApp();
     });
 };
+
+const removeEmployee = async () => {
+  const employees = await Employee.getAllUpdated();
+  let newEmployArray = [];
+  for (let i = 0; i < employees.length; i++) {
+    newEmployArray.push({
+      name: employees[i].first_name + " " + employees[i].last_name,
+      value: employees[i].id,
+    });
+    console.log(newEmployArray);
+  }
+  inquirer
+    .prompt([
+      {
+        name: "update",
+        type: "list",
+        message: "Which employee would you like to delete?",
+        choices: newEmployArray
+      }
+    ]).then((answer) => {
+      console.log(answer);
+
+      startApp();
+
+    });
+};
+    
