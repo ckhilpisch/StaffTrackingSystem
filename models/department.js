@@ -4,17 +4,11 @@ const Department = function(department) {
   this.name = deparment.name;
 };
 
-Department.getAll = () => {
-    sql.query("SELECT * FROM employeetracker_db.department", (err, res) => {
-      if (err) {
-        console.log("error getting department table");
-      } else {
-      console.table(res);
-      }
-    });
-  };
+Department.getAll =( ) => {
+    return sql.query("SELECT * FROM employeetracker_db.department")
+};
 
-Department.create = (newDepartment, result) => {
+Department.create = (newDepartment, answer) => {
     sql.query("INSERT INTO employeetracker_db.department SET ?", newDewpartment, (err, res) => {
       if (err) {
         console.log("Couldn't insert new department");

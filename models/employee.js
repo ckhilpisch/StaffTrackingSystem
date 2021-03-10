@@ -8,13 +8,11 @@ const Employee = function (employee) {
 };
 
 Employee.getAll = () => {
-  sql.query("SELECT * FROM employeetracker_db.employee", (err, res) => {
-    if (err) {
-      console.log("error getting employee table");
-    } else {
-      console.table(res);
-    }
-  });
+  return sql.query("SELECT * FROM employeetracker_db.employee")
+};
+
+Employee.getAllUpdated = () => {
+  return sql.query("SELECT first_name, last_name, id FROM employeetracker_db.employee")
 };
 
 Employee.create = (newEmployee, result) => {

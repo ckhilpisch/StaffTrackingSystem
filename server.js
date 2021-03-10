@@ -1,38 +1,54 @@
-const connection = require('./config/connection');
+const connection = require("./config/connection");
 const mysql = require("mysql");
 const inquirer = require("inquirer");
-const util = require('util');
+const util = require("util");
 connection.query = util.promisify(connection.query);
-const Department = require('./models/department');
-const Employee = require('./models/employee');
-const Role = require('./models/role')
+const Department = require("./models/department");
+const Employee = require("./models/employee");
+const Role = require("./models/role");
+const { promises } = require("fs");
+const { type } = require("jquery");
 
-
- const startApp = () => {
+const startApp = () => {
+  console.log("start app");
   inquirer
     .prompt({
-      type: 'list',
-      message: 'What would you like to do?',
-      name: 'general',
-      choices: ['View Employees', 'View Departments','View Roles', 'Add an Employee', 'Update an Employee','Remove an Employee','Add an Role', 'Update a Role','Remove a Role', 'Add a Department', 'Update a Depatment','Remove a Department','View Employees by Manager', 'Update an Employee Manager']
-    }
-  )
+      type: "list",
+      message: "What would you like to do?",
+      name: "general",
+      choices: [
+        "View Employees",
+        "View Departments",
+        "View Roles",
+        "Add an Employee",
+        "Update an Employee",
+        "Remove an Employee",
+        "Add an Role",
+        "Update a Role",
+        "Remove a Role",
+        "Add a Department",
+        "Update a Depatment",
+        "Remove a Department",
+        "View Employees by Manager",
+        "Update an Employee Manager",
+      ],
+    })
     .then((answer) => {
       switch (answer.general) {
-        case 'View Employees':
-        viewEmployees();
-        break;
-        case 'View Departments':
-        viewDept();
-        break;
-        case 'View Roles':
-        viewRoles();
-        break;
-        case 'Add an Employee':
-        addEmployee();
-        break;
-        case 'Update an Employee':
-        updateEmployee();
+        case "View Employees":
+          viewEmployees();
+          break;
+        case "View Departments":
+          viewDept();
+          break;
+        case "View Roles":
+          viewRoles();
+          break;
+        case "Add an Employee":
+          addEmployee();
+          break;
+        case "Update an Employee":
+          updateEmployee();
         // break;
         // case 'Remove an Employee':
         // removeEmployee();
@@ -68,171 +84,143 @@ const Role = require('./models/role')
 startApp();
 
 const viewEmployees = async () => {
-  await Employee.getAll();
+  const employ = await Employee.getAll();
+  console.table(employ);
   startApp();
-
-  // let sql =
-  //   "SELECT * FROM employeetracker_db.employee";
-  // connection.query(sql, function (err, res) {
-  //   if (err) {
-  //     console.log("Error viewing Employee table");
-  //   }
-  //   if (res) {
-  //     console.table(res);
-  //   }
-  //   startApp();
-  // });
-  
 };
 const viewDept = async () => {
-  await Department.getAll();
+  const dept = await Department.getAll();
+  console.table(dept);
   startApp();
-
-
-  
-  // let sql =
-  //   "SELECT * FROM employeetracker_db.department";
-  // connection.query(sql, function (err, res) {
-  //   if (err) {
-  //     console.log("Error viewing department table");
-  //   }
-  //   if (res) {
-  //     console.table(res);
-  //   }
-  //   startApp();
-  // });
-  
 };
 
 const viewRoles = async () => {
-  await Role.getAll();
+  const role = await Role.getAll();
+  console.table(role);
   startApp();
-  // let sql =
-  //   "SELECT * FROM employeetracker_db.role";
-  // connection.query(sql, function (err, res) {
-  //   if (err) {
-  //     console.log("Error viewing Employee table");
-  //   }
-  //   if (res) {
-  //     console.table(res);
-  //   }
-    
-  // });
-  
 };
 
 const addEmployee = async () => {
-  function createArray() { 
-    let sql =
-    "SELECT title, id FROM employeetracker_db.role";
-    return connection.query(sql);
-  };
-  const roleArray = await createArray();
+  const role = await Role.getAllUpdated();
   let newRoleArray = [];
-  for (let i = 0; i < roleArray.length; i++) {
-    newRoleArray.push({ 
-      name : roleArray[i].title,
-      value : roleArray[i].id
-    })
+  for (let i = 0; i < role.length; i++) {
+    newRoleArray.push({
+      name: role[i].title,
+      value: role[i].id,
+    });
   }
 
-
+  const employees = await Employee.getAllUpdated();
+  let newEmployArray = [];
+  for (let i = 0; i < employees.length; i++) {
+    newEmployArray.push({
+      name: employees[i].first_name + " " + employees[i].last_name,
+      value: employees[i].id,
+    });
+    console.log(newEmployArray);
+  }
   inquirer
-  .prompt([
-    {
-    name: 'fName',
-    type: 'input',
-    message: 'What is the employees first name?'
-    },
-    {
-    name: 'lName',
-    type: 'input',
-    message: 'What is the employees last name?'
-    },
-    {  
-    name: 'newRole',
-    type: 'list',
-    message: 'What is the employees role?',
-    choices: newRoleArray
-    },
-  ]).then((answer) => {
-    console.log(answer);
+    .prompt([
+      {
+        name: "fName",
+        type: "input",
+        message: "What is the employees first name?",
+      },
+      {
+        name: "lName",
+        type: "input",
+        message: "What is the employees last name?",
+      },
+      {
+        name: "newRole",
+        type: "list",
+        message: "What is the employees role?",
+        choices: newRoleArray,
+      },
+      {
+        name: "askManager",
+        type: "confirm",
+        message: "Would you like to add a manager?",
+        default: true
+      },
+      {
+        name: "newManager",
+        type: "list",
+        when: function (answer) {
+          return answer.askManager == true;
+        },
+        message: "Who is this employee's manager?",
+        choices: newEmployArray
+      },
+    ])
+    .then((answer) => {
+      console.log(answer);
 
-    startApp();
-  })
-  
+      startApp();
+    });
 };
-
 const updateEmployee = async () => {
-  function createArray() { 
-    let sql =
-    "SELECT first_name, last_name, id FROM employeetracker_db.employee";
-    return connection.query(sql);
-  };
-  const employArray = await createArray();
-  console.log (employArray);
-  // let newEmployArray = [];
-  // for (let i = 0; i < employArray.length; i++) {
-  //   newEmployArray.push({ 
-  //     name : employArray[i].firstname,
-  //     lastname: employArray[i].lastname,
-  //     value : employArray[i].id
-  //   })
-  // }
-
-
-  // inquirer
-  // .prompt([
-  //   {
-  //   name: 'fName',
-  //   type: 'input',
-  //   message: 'What is the employees first name?'
-  //   },
-  //   {
-  //   name: 'lName',
-  //   type: 'input',
-  //   message: 'What is the employees last name?'
-  //   },
-  //   {
-  //   type: 'list',
-  //   message: 'What would you like to update?',
-  //   name: 'update',
-  //   choices: ['First name', 'Last name', 'Role']
-    
-  // ]).then((answer) => {
-  //   console.log(answer);
-    
-    startApp();
-  };
-
-  const deleteEmployee = async () => {
-    function createArray() { 
-      let sql =
-      "SELECT first_name, last_name, id FROM employeetracker_db.employee";
-      return connection.query(sql);
-    };
-    const employArray = await createArray();
-    console.log (employArray);
+  const role = await Role.getAllUpdated();
+  let newRoleArray = [];
+  for (let i = 0; i < role.length; i++) {
+    newRoleArray.push({
+      name: role[i].title,
+      value: role[i].id,
+    });
   }
-  //   inquirer
-  // .prompt([
-  //   {
-  //   name: 'fName',
-  //   type: 'input',
-  //   message: 'What is the employees first name?',
-  //   default: 'Casey'
-  //   },
-  //   {
-  //   name: 'lName',
-  //   type: 'input',
-  //   message: 'What is the employees last name?',
-  //   default: 'Jones'
-  //   },
-  //   {
-  //   name: 'delete',
-  //   type: 'confirm',
-  //   message: 'Are you sure you would like to delete?',
-  //   default: true
-  //   }
 
-  // ]).then(answers)
+  const employees = await Employee.getAllUpdated();
+  let newEmployArray = [];
+  for (let i = 0; i < employees.length; i++) {
+    newEmployArray.push({
+      name: employees[i].first_name + " " + employees[i].last_name,
+      value: employees[i].id,
+    });
+    console.log(newEmployArray);
+  }
+  inquirer
+    .prompt([
+      {
+        name: "update",
+        type: "list",
+        message: "Which employee would you like to update?",
+        choices: newEmployArray
+      },
+      {
+        name: "updateItem",
+        type: "list",
+        message: "What would you like to update?",
+        choices: ["First Name", "Last Name", "Role"]
+      },
+      {
+        name: "newFirst",
+        type: "input",
+        when: function (answer) {
+          return answer.updateItem == "First Name";
+        },
+        message: "What is the employee's new first name?",
+      },
+      {
+        name: "newLast",
+        type: "input",
+        when: function (answer) {
+          return answer.updateItem == "Last Name";
+        },
+        message: "What is the employee's new last name?",
+      },
+      {
+        name: "newRole",
+        type: "list",
+        when: function (answer) {
+          return answer.updateItem == "Role";
+        },
+        message: "What is the employee's new role?",
+        choices: newRoleArray,
+      },
+    ])
+    .then((answer) => {
+      console.log(answer);
+
+      startApp();
+    });
+};

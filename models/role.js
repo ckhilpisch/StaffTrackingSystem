@@ -7,13 +7,11 @@ const Role = function(role) {
 };
 
 Role.getAll = () => {
-    sql.query("SELECT * FROM employeetracker_db.role", (err, res) => {
-      if (err) {
-        console.log("error getting role table");
-      } else {
-      console.table(res);
-      }
-    });
-  };
+    return sql.query("SELECT * FROM employeetracker_db.role")
+};
+
+Role.getAllUpdated = () => {
+  return sql.query("SELECT title, id FROM employeetracker_db.role")
+};
 
   module.exports = Role;
