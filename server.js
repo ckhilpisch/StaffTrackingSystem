@@ -8,73 +8,75 @@ const Employee = require("./models/employee");
 const Role = require("./models/role");
 const { promises } = require("fs");
 const { type } = require("jquery");
+const questions = require("./utils/questions");
+// const employeeLatest = async () =>{
+//   const employees = await Employee.getAllUpdated();
+//   let newEmployArray = [];
+//   for (let i = 0; i < employees.length; i++) {
+//     newEmployArray.push({
+//       name: employees[i].first_name + " " + employees[i].last_name,
+//       value: employees[i].id,
+//     });
+//     return newEmployArray;
+//   }
+// };
+// const roleLatest = async () => {
+//   const role = await Role.getAllUpdated();
+//   let newRoleArray = [];
+//   for (let i = 0; i < role.length; i++) {
+//     newRoleArray.push({
+//       name: role[i].title,
+//       value: role[i].id,
+//     });
+//     return newRoleArray;
+//   }
+// }
 
 const startApp = () => {
   console.log("start app");
-  inquirer
-    .prompt({
-      type: "list",
-      message: "What would you like to do?",
-      name: "general",
-      choices: [
-        "View Employees",
-        "View Departments",
-        "View Roles",
-        "Add an Employee",
-        "Update an Employee",
-        "Remove an Employee",
-        "Add a Role",
-        "Update a Role",
-        "Remove a Role",
-        "Add a Department",
-        "Remove a Department",
-        "View Employees by Manager",
-        "Update an Employee Manager",
-      ],
-    })
-    .then((answer) => {
-      switch (answer.general) {
-        case "View Employees":
-          viewEmployees();
-          break;
-        case "View Departments":
-          viewDept();
-          break;
-        case "View Roles":
-          viewRoles();
-          break;
-        case "Add an Employee":
-          addEmployee();
-          break;
-        case "Update an Employee":
-          updateEmployee();
+  inquirer.prompt(questions.startAppQuestions).then((answer) => {
+    switch (answer.general) {
+      case "View Employees":
+        viewEmployees();
         break;
-        case 'Remove an Employee':
+      case "View Departments":
+        viewDept();
+        break;
+      case "View Roles":
+        viewRoles();
+        break;
+      case "Add an Employee":
+        addEmployee();
+        break;
+      case "Update an Employee":
+        updateEmployee();
+        break;
+      case "Remove an Employee":
         removeEmployee();
         break;
-        case 'Add a Role':
+      case "Add a Role":
         addRole();
         break;
-        case 'Update a Role':
+      case "Update a Role":
         updateRole();
         break;
-        case 'Remove a Role':
+      case "Remove a Role":
         removeRole();
         break;
-        case 'Add a Department':
+      case "Add a Department":
         addDept();
         break;
-        case 'Remove a Department':
+      case "Remove a Department":
         removeDept();
         break;
-        case 'View Employees by Manager':
+      case "View Employees by Manager":
         viewManager();
         break;
-        case 'Update an Employee Manager':
+      case "Update an Employee Manager":
         updateManager();
         break;
-      }
-    });
+    }
+  });
 };
 
 startApp();
@@ -137,7 +139,7 @@ const addEmployee = async () => {
         name: "askManager",
         type: "confirm",
         message: "Would you like to add a manager?",
-        default: true
+        default: true,
       },
       {
         name: "newManager",
@@ -146,11 +148,12 @@ const addEmployee = async () => {
           return answer.askManager == true;
         },
         message: "Who is this employee's manager?",
-        choices: newEmployArray
+        choices: newEmployArray,
       },
     ])
     .then((answer) => {
       console.log(answer);
+
 
       startApp();
     });
@@ -180,13 +183,13 @@ const updateEmployee = async () => {
         name: "update",
         type: "list",
         message: "Which employee would you like to update?",
-        choices: newEmployArray
+        choices: newEmployArray,
       },
       {
         name: "updateItem",
         type: "list",
         message: "What would you like to update?",
-        choices: ["First Name", "Last Name", "Role"]
+        choices: ["First Name", "Last Name", "Role"],
       },
       {
         name: "newFirst",
@@ -237,13 +240,13 @@ const removeEmployee = async () => {
         name: "update",
         type: "list",
         message: "Which employee would you like to delete?",
-        choices: newEmployArray
-      }
-    ]).then((answer) => {
+        choices: newEmployArray,
+      },
+    ])
+    .then((answer) => {
       console.log(answer);
 
       startApp();
-
     });
 };
 
@@ -255,9 +258,8 @@ const addRole = async () => {
       name: role[i].title,
       value: role[i].id,
     });
-    
   }
-  console.log(newRoleArray)
+  console.log(newRoleArray);
 
   const department = await Department.getAll();
   let newDeptArray = [];
@@ -302,9 +304,8 @@ const updateRole = async () => {
       name: role[i].title,
       value: role[i].id,
     });
-    
   }
-  console.log(newRoleArray)
+  console.log(newRoleArray);
 
   const department = await Department.getAll();
   let newDeptArray = [];
@@ -321,13 +322,13 @@ const updateRole = async () => {
         name: "updateRole",
         type: "list",
         message: "Which role would you like to update?",
-        choices: newRoleArray
+        choices: newRoleArray,
       },
       {
         name: "updateItem",
         type: "list",
         message: "What would you like to update?",
-        choices: ["Role Name", "Salary", "Department"]
+        choices: ["Role Name", "Salary", "Department"],
       },
       {
         name: "newRoleName",
@@ -362,7 +363,7 @@ const updateRole = async () => {
     });
 };
 
-const removeRole= async () => {
+const removeRole = async () => {
   const role = await Role.getAllUpdated();
   let newRoleArray = [];
   for (let i = 0; i < role.length; i++) {
@@ -370,7 +371,6 @@ const removeRole= async () => {
       name: role[i].title,
       value: role[i].id,
     });
-    
   }
   inquirer
     .prompt([
@@ -378,13 +378,13 @@ const removeRole= async () => {
         name: "deleteRole",
         type: "list",
         message: "Which role would you like to delete?",
-        choices: newRoleArray
+        choices: newRoleArray,
       },
-    ]).then((answer) => {
+    ])
+    .then((answer) => {
       console.log(answer);
 
       startApp();
-
     });
 };
 const addDept = async () => {
@@ -399,21 +399,15 @@ const addDept = async () => {
   console.log(newDeptArray);
 
   inquirer
-    .prompt([
-      {
-        name: "newDept",
-        type: "input",
-        message: "What is the title of the new department?",
-      },
-    ])
-    .then((answer) => {
-      console.log(answer);
-
+    .prompt(questions.addDeptQuestions).then((answers) => {
+      console.log(answers);
+      const query = "INSERT INTO employeetracker_db.department SET ?";
+      connection.query(query, { name: answers.newDept });
       startApp();
     });
 };
 
-const removeDept= async () => {
+const removeDept = async () => {
   const department = await Department.getAll();
   let newDeptArray = [];
   for (let i = 0; i < department.length; i++) {
@@ -428,13 +422,15 @@ const removeDept= async () => {
         name: "deleteDept",
         type: "list",
         message: "Which department would you like to delete?",
-        choices: newDeptArray
+        choices: newDeptArray,
       },
-    ]).then((answer) => {
-      console.log(answer);
+    ])
+    .then((answers) => {
+      console.log(answers);
+      const query = "DELETE FROM employeetracker_db.department WHERE id = ?";
+      connection.query(query, `${answers.deleteDept}`);
 
       startApp();
-
     });
 };
 
@@ -454,15 +450,14 @@ const updateManager = async () => {
         name: "update",
         type: "list",
         message: "Which employee's manager would you like to update?",
-        choices: newEmployArray
+        choices: newEmployArray,
       },
       {
         name: "newManager",
         type: "list",
         message: "Who is the employee's new manager?",
-        choices: newEmployArray
+        choices: newEmployArray,
       },
-      
     ])
     .then((answer) => {
       console.log(answer);
@@ -470,5 +465,3 @@ const updateManager = async () => {
       startApp();
     });
 };
-
-

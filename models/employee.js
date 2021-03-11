@@ -15,6 +15,10 @@ Employee.getAllUpdated = () => {
   return sql.query("SELECT first_name, last_name, id FROM employeetracker_db.employee")
 };
 
+// Employee.getalllManagers = () => {
+//   return sql.query("SELECT first_name, last_name, manager_id"),
+// };
+
 Employee.create = (newEmployee, result) => {
   sql.query(
     "INSERT INTO employeetracker_db.employee SET ?",
