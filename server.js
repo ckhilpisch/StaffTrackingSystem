@@ -9,9 +9,25 @@ const Role = require("./models/role");
 const { promises } = require("fs");
 const { type } = require("jquery");
 const questions = require("./utils/questions");
+const CFonts = require('cfonts');
+const chalk = require('chalk');
 
+CFonts.say('STAFF STUFF', {
+  font: 'block',              // define the font face
+  align: 'left',              // define text alignment
+  colors: ['red','magentaBright'],         // define all colors
+  background: 'transparent',  // define the background color, you can also use `backgroundColor` here as key
+  letterSpacing: 1,           // define letter spacing
+  lineHeight: 1,              // define the line height
+  space: true,                // define if the output text should have empty lines on top and on the bottom
+  maxLength: '0',             // define how many character can be on one line
+  gradient: false,          // define your two gradient colors
+  independentGradient: false, // define if you want to recalculate the gradient for each new line
+  transitionGradient: true,  // define if this is a transition between colors directly
+  env: 'node'                 // define the environment CFonts is being executed in
+});
 const startApp = () => {
-  console.log("start app");
+
   inquirer.prompt(questions.startAppQuestions).then((answer) => {
     switch (answer.general) {
       case "View Employees":
@@ -47,9 +63,9 @@ const startApp = () => {
       case "View Employees by Manager":
         viewManager();
         break;
-      case "Update an Employee Manager":
-        updateManager();
-        break;
+      // case "Update an Employee Manager":
+      //   updateManager();
+      //   break;
     }
   });
 };
@@ -141,14 +157,14 @@ const addEmployee = async () => {
           "')",
         function (err, res) {
           if (err) {
-            console.log("error creating employee");
+            console.log(chalk.red("error creating employee"));
           } else if (res) {
-            console.log(
+            console.log(chalk.magentaBright(
               "You created a new employee named " +
                 first_name + " " +
                 last_name +
                 "!!!!"
-            );
+            ));
           }
           startApp();
         }
@@ -199,11 +215,11 @@ const updateRole = async () => {
           "')",
         function (err, res) {
           if (err) {
-            console.log("error changing role");
+            console.log(chalk.redBright("error changing role"));
           } else if (res) {
-            console.log(
-              "You created a new role for your employee!"
-            );
+            console.log(chalk.magentaBright(
+              "You updated your employees role!"
+            ));
           }
           startApp();
         }
@@ -237,9 +253,9 @@ const removeEmployee = async () => {
         "DELETE FROM employee WHERE id = '" + id + "'",
         function (err, res) {
           if (err) {
-            console.log("Error deleting employee");
+            console.log(chalk.redBright("Error deleting employee"));
           } else if (res) {
-            console.log("You deleted your employee!");
+            console.log(chalk.magentaBright("You deleted your employee!"));
           }
           startApp();
         }
@@ -300,9 +316,9 @@ const addRole = async () => {
           "')",
         function (err, res) {
           if (err) {
-            console.log("error creating role");
+            console.log(chalk.redBright("error creating role"));
           } else if (res) {
-            console.log("You created a new role named " + title + "!");
+            console.log(chalk.magentaBright("You created a new role named " + title + "!"));
           }
           startApp();
         }
@@ -332,12 +348,12 @@ const removeRole = async () => {
       console.log(answers);
       let id = answers.deleteRole;
       connection.query(
-        "DELETE FROM role WHERE id = '" + id + "' ",
+        "DELETE FROM employeetracker_db.role WHERE id = '" + id + "' ",
         function (err, res) {
           if (err) {
-            console.log("Error deleting the role");
+            console.log(chalk.redBright("Error deleting the role"));
           } else if (res) {
-            console.log("You deleted the role!");
+            console.log(chalk.magentaBright("You deleted the role!"));
           }
           startApp();
         }
@@ -362,9 +378,9 @@ const addDept = async () => {
 
       function (err, res) {
         if (err) {
-          console.log("Error creating new department");
+          console.log(chalk.redBright("Error creating new department"));
         } else if (res) {
-          console.log("You created a new department called " + name + "!");
+          console.log(chalk.magentaBright("You created a new department called " + name + "!"));
         }
         startApp();
       }
@@ -397,9 +413,9 @@ const removeDept = async () => {
         "DELETE FROM department WHERE id = '" + id + "'",
         function (err, res) {
           if (err) {
-            console.log("error deleting department");
+            console.log(chalk.redBright("error deleting department"));
           } else if (res) {
-            console.log("You deleted the department!");
+            console.log(chalk.magentaBright("You deleted the department!"));
           }
           startApp();
         }
@@ -443,9 +459,9 @@ const updateManager = async () => {
           "'",
         function (err, res) {
           if (err) {
-            console.log("error updating manager");
+            console.log(chalk.redBright("error updating manager"));
           } else if (res) {
-            console.log("You added a new manager to your employee");
+            console.log(chalk.magentaBright("You added a new manager to your employee"));
           }
           startApp();
         }
