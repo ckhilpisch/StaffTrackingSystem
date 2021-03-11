@@ -26,11 +26,11 @@ const startApp = () => {
       case "Add an Employee":
         addEmployee();
         break;
+      case "Update an Employee Role":
+        updateRole();
+        break;
       case "Remove an Employee":
         removeEmployee();
-        break;
-      case "Update a Role":
-        updateRole();
         break;
       case "Add a Role":
         addRole();
@@ -189,13 +189,26 @@ const updateRole = async () => {
         choices: newRoleArray,
       },
     ])
-    .then((answer) => {
-      console.log(answer);
-
-      startApp();
-    }
-    
-    );
+    .then((answers) => {
+      console.log(answers);
+      let employee = answers.update;
+      let role = answers.newRole;
+      connection.query(
+        "INSERT INTO employee (role_id) VALUES ('" +
+          role +
+          "')",
+        function (err, res) {
+          if (err) {
+            console.log("error changing role");
+          } else if (res) {
+            console.log(
+              "You created a new role for your employee!"
+            );
+          }
+          startApp();
+        }
+      );
+    });
 };
 
 const removeEmployee = async () => {

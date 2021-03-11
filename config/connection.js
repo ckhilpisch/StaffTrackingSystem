@@ -10,7 +10,6 @@ const connection = mysql.createConnection({
 });
 connection.connect((err) => {
   if (err) throw err;
-  // runSearch();
 });
 
 module.exports = connection;

@@ -1,17 +1,15 @@
-const sql = require('../config/connection');
+const connection = require('../config/connection');
 
 const Department = function(department) {
-  this.name = deparment.name;
+  this.connection = connection
 };
 
 Department.getAll =() => {
-    return sql.query("SELECT * FROM employeetracker_db.department")
+    return connection.query("SELECT * FROM employeetracker_db.department")
 };
 
 Department.create = () => {
-    sql.query("INSERT INTO employeetracker_db.department SET ?", 
-      { name: answers.addDept}
-  
-    )};
+   return connection.query("INSERT INTO employeetracker_db.department SET ?", 
+)};
 
 module.exports = Department;
