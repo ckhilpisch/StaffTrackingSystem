@@ -1,17 +1,20 @@
-const sql = require('../config/connection');
+const connection = require('../config/connection');
 
 const Role = function(role) {
-  this.title = role.title;
-  this.salary = role.salary;
-  this.department = role.department_id
+  this.connection = connection
 };
 
 Role.getAll = () => {
-    return sql.query("SELECT * FROM employeetracker_db.role")
+    return connection.query("SELECT * FROM employeetracker_db.role")
 };
 
 Role.getAllUpdated = () => {
-  return sql.query("SELECT title, id FROM employeetracker_db.role")
+  return connection.query("SELECT title, id FROM employeetracker_db.role")
 };
+
+Role.delete = () => {
+  return connection.query("SELECT title, id FROM employeetracker_db.role")
+
+}
 
   module.exports = Role;

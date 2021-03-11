@@ -9,28 +9,6 @@ const Role = require("./models/role");
 const { promises } = require("fs");
 const { type } = require("jquery");
 const questions = require("./utils/questions");
-// const employeeLatest = async () =>{
-//   const employees = await Employee.getAllUpdated();
-//   let newEmployArray = [];
-//   for (let i = 0; i < employees.length; i++) {
-//     newEmployArray.push({
-//       name: employees[i].first_name + " " + employees[i].last_name,
-//       value: employees[i].id,
-//     });
-//     return newEmployArray;
-//   }
-// };
-// const roleLatest = async () => {
-//   const role = await Role.getAllUpdated();
-//   let newRoleArray = [];
-//   for (let i = 0; i < role.length; i++) {
-//     newRoleArray.push({
-//       name: role[i].title,
-//       value: role[i].id,
-//     });
-//     return newRoleArray;
-//   }
-// }
 
 const startApp = () => {
   console.log("start app");
@@ -48,17 +26,14 @@ const startApp = () => {
       case "Add an Employee":
         addEmployee();
         break;
-      case "Update an Employee":
-        updateEmployee();
-        break;
       case "Remove an Employee":
         removeEmployee();
         break;
-      case "Add a Role":
-        addRole();
-        break;
       case "Update a Role":
         updateRole();
+        break;
+      case "Add a Role":
+        addRole();
         break;
       case "Remove a Role":
         removeRole();
@@ -107,7 +82,6 @@ const addEmployee = async () => {
       value: role[i].id,
     });
   }
-
   const employees = await Employee.getAllUpdated();
   let newEmployArray = [];
   for (let i = 0; i < employees.length; i++) {
@@ -115,7 +89,6 @@ const addEmployee = async () => {
       name: employees[i].first_name + " " + employees[i].last_name,
       value: employees[i].id,
     });
-    console.log(newEmployArray);
   }
   inquirer
     .prompt([
@@ -151,14 +124,38 @@ const addEmployee = async () => {
         choices: newEmployArray,
       },
     ])
-    .then((answer) => {
-      console.log(answer);
-
-
-      startApp();
+    .then((answers) => {
+      let first_name = answers.fName;
+      let last_name = answers.lName;
+      let manager_id = answers.newManager;
+      let role_id = answers.newRole;
+      connection.query(
+        "INSERT INTO employee (first_name, last_name, manager_id, role_id) VALUES ('" +
+          first_name +
+          "', '" +
+          last_name +
+          "', '" +
+          manager_id +
+          "', '" +
+          role_id +
+          "')",
+        function (err, res) {
+          if (err) {
+            console.log("error creating employee");
+          } else if (res) {
+            console.log(
+              "You created a new employee named " +
+                first_name + " " +
+                last_name +
+                "!!!!"
+            );
+          }
+          startApp();
+        }
+      );
     });
 };
-const updateEmployee = async () => {
+const updateRole = async () => {
   const role = await Role.getAllUpdated();
   let newRoleArray = [];
   for (let i = 0; i < role.length; i++) {
@@ -186,33 +183,8 @@ const updateEmployee = async () => {
         choices: newEmployArray,
       },
       {
-        name: "updateItem",
-        type: "list",
-        message: "What would you like to update?",
-        choices: ["First Name", "Last Name", "Role"],
-      },
-      {
-        name: "newFirst",
-        type: "input",
-        when: function (answer) {
-          return answer.updateItem == "First Name";
-        },
-        message: "What is the employee's new first name?",
-      },
-      {
-        name: "newLast",
-        type: "input",
-        when: function (answer) {
-          return answer.updateItem == "Last Name";
-        },
-        message: "What is the employee's new last name?",
-      },
-      {
         name: "newRole",
         type: "list",
-        when: function (answer) {
-          return answer.updateItem == "Role";
-        },
         message: "What is the employee's new role?",
         choices: newRoleArray,
       },
@@ -221,7 +193,9 @@ const updateEmployee = async () => {
       console.log(answer);
 
       startApp();
-    });
+    }
+    
+    );
 };
 
 const removeEmployee = async () => {
@@ -243,10 +217,20 @@ const removeEmployee = async () => {
         choices: newEmployArray,
       },
     ])
-    .then((answer) => {
-      console.log(answer);
-
-      startApp();
+    .then((answers) => {
+      console.log(answers);
+      id = answers.update;
+      connection.query(
+        "DELETE FROM employee WHERE id = '" + id + "'",
+        function (err, res) {
+          if (err) {
+            console.log("Error deleting employee");
+          } else if (res) {
+            console.log("You deleted your employee!");
+          }
+          startApp();
+        }
+      );
     });
 };
 
@@ -289,77 +273,27 @@ const addRole = async () => {
         choices: newDeptArray,
       },
     ])
-    .then((answer) => {
-      console.log(answer);
-
-      startApp();
-    });
-};
-
-const updateRole = async () => {
-  const role = await Role.getAllUpdated();
-  let newRoleArray = [];
-  for (let i = 0; i < role.length; i++) {
-    newRoleArray.push({
-      name: role[i].title,
-      value: role[i].id,
-    });
-  }
-  console.log(newRoleArray);
-
-  const department = await Department.getAll();
-  let newDeptArray = [];
-  for (let i = 0; i < department.length; i++) {
-    newDeptArray.push({
-      name: department[i].name,
-      value: department[i].id,
-    });
-  }
-  console.log(newDeptArray);
-  inquirer
-    .prompt([
-      {
-        name: "updateRole",
-        type: "list",
-        message: "Which role would you like to update?",
-        choices: newRoleArray,
-      },
-      {
-        name: "updateItem",
-        type: "list",
-        message: "What would you like to update?",
-        choices: ["Role Name", "Salary", "Department"],
-      },
-      {
-        name: "newRoleName",
-        type: "input",
-        when: function (answer) {
-          return answer.updateItem == "Role Name";
-        },
-        message: "What is the new name of the role?",
-      },
-      {
-        name: "newSalaryt",
-        type: "number",
-        when: function (answer) {
-          return answer.updateItem == "Salary";
-        },
-        message: "What is the new salary for this role?",
-      },
-      {
-        name: "newDept",
-        type: "list",
-        when: function (answer) {
-          return answer.updateItem == "Department";
-        },
-        message: "What is this role's new department?",
-        choices: newDeptArray,
-      },
-    ])
-    .then((answer) => {
-      console.log(answer);
-
-      startApp();
+    .then((answers) => {
+      let title = answers.newRole;
+      let department_id = answers.newDepart;
+      let salary = answers.newSalary;
+      connection.query(
+        "INSERT INTO role (title, salary, department_id) VALUES ('" +
+          title +
+          "', '" +
+          salary +
+          "', '" +
+          department_id +
+          "')",
+        function (err, res) {
+          if (err) {
+            console.log("error creating role");
+          } else if (res) {
+            console.log("You created a new role named " + title + "!");
+          }
+          startApp();
+        }
+      );
     });
 };
 
@@ -381,10 +315,20 @@ const removeRole = async () => {
         choices: newRoleArray,
       },
     ])
-    .then((answer) => {
-      console.log(answer);
-
-      startApp();
+    .then((answers) => {
+      console.log(answers);
+      let id = answers.deleteRole;
+      connection.query(
+        "DELETE FROM role WHERE id = '" + id + "' ",
+        function (err, res) {
+          if (err) {
+            console.log("Error deleting the role");
+          } else if (res) {
+            console.log("You deleted the role!");
+          }
+          startApp();
+        }
+      );
     });
 };
 const addDept = async () => {
@@ -398,13 +342,21 @@ const addDept = async () => {
   }
   console.log(newDeptArray);
 
-  inquirer
-    .prompt(questions.addDeptQuestions).then((answers) => {
-      console.log(answers);
-      const query = "INSERT INTO employeetracker_db.department SET ?";
-      connection.query(query, { name: answers.newDept });
-      startApp();
-    });
+  inquirer.prompt(questions.addDeptQuestions).then((answers) => {
+    let name = answers.newDept;
+    connection.query(
+      "INSERT INTO department (name) VALUES ('" + name + "')",
+
+      function (err, res) {
+        if (err) {
+          console.log("Error creating new department");
+        } else if (res) {
+          console.log("You created a new department called " + name + "!");
+        }
+        startApp();
+      }
+    );
+  });
 };
 
 const removeDept = async () => {
@@ -427,10 +379,18 @@ const removeDept = async () => {
     ])
     .then((answers) => {
       console.log(answers);
-      const query = "DELETE FROM employeetracker_db.department WHERE id = ?";
-      connection.query(query, `${answers.deleteDept}`);
-
-      startApp();
+      let id = answers.deleteDept;
+      connection.query(
+        "DELETE FROM department WHERE id = '" + id + "'",
+        function (err, res) {
+          if (err) {
+            console.log("error deleting department");
+          } else if (res) {
+            console.log("You deleted the department!");
+          }
+          startApp();
+        }
+      );
     });
 };
 
@@ -459,9 +419,23 @@ const updateManager = async () => {
         choices: newEmployArray,
       },
     ])
-    .then((answer) => {
-      console.log(answer);
-
-      startApp();
+    .then((answers) => {
+      let id = answers.update;
+      let manager_id = answers.newManager;
+      connection.query(
+        "UPDATE employee SET manager_id = '" +
+          manager_id +
+          "' WHERE id = '" +
+          id +
+          "'",
+        function (err, res) {
+          if (err) {
+            console.log("error updating manager");
+          } else if (res) {
+            console.log("You added a new manager to your employee");
+          }
+          startApp();
+        }
+      );
     });
 };

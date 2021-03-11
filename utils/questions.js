@@ -38,10 +38,9 @@ const startAppQuestions = [
       "View Departments",
       "View Roles",
       "Add an Employee",
-      "Update an Employee",
+      "Update an Employee Role",
       "Remove an Employee",
       "Add a Role",
-      "Update a Role",
       "Remove a Role",
       "Add a Department",
       "Remove a Department",
@@ -51,7 +50,7 @@ const startAppQuestions = [
 }
 ];
 
-// const addEmployQuestions = [
+// const addEmployQuestions = (choices, choices2) => [
 //     {
 //         name: "fName",
 //         type: "input",
@@ -66,7 +65,7 @@ const startAppQuestions = [
 //         name: "newRole",
 //         type: "list",
 //         message: "What is the employees role?",
-//         choices: newRoleArray,
+//         choices: choices,
 //       },
 //       {
 //         name: "askManager",
@@ -81,7 +80,7 @@ const startAppQuestions = [
 //           return answer.askManager == true;
 //         },
 //         message: "Who is this employee's manager?",
-//         choices: newEmployArray
+//         choices: choices2
 //       },
 // ];
 
