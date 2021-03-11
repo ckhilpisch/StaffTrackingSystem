@@ -124,34 +124,16 @@ const addEmployee = async () => {
         message: "What is the employees role?",
         choices: newRoleArray,
       },
-      {
-        name: "askManager",
-        type: "confirm",
-        message: "Would you like to add a manager?",
-        default: true,
-      },
-      {
-        name: "newManager",
-        type: "list",
-        when: function (answer) {
-          return answer.askManager == true;
-        },
-        message: "Who is this employee's manager?",
-        choices: newEmployArray,
-      },
     ])
     .then((answers) => {
       let first_name = answers.fName;
       let last_name = answers.lName;
-      let manager_id = answers.newManager;
       let role_id = answers.newRole;
       connection.query(
-        "INSERT INTO employee (first_name, last_name, manager_id, role_id) VALUES ('" +
+        "INSERT INTO employee (first_name, last_name, role_id) VALUES ('" +
           first_name +
           "', '" +
           last_name +
-          "', '" +
-          manager_id +
           "', '" +
           role_id +
           "')",
@@ -348,7 +330,7 @@ const removeRole = async () => {
       console.log(answers);
       let id = answers.deleteRole;
       connection.query(
-        "DELETE FROM employeetracker_db.role WHERE id = '" + id + "' ",
+        "DELETE FROM role WHERE id = '" + id + "'",
         function (err, res) {
           if (err) {
             console.log(chalk.redBright("Error deleting the role"));
@@ -410,7 +392,7 @@ const removeDept = async () => {
       console.log(answers);
       let id = answers.deleteDept;
       connection.query(
-        "DELETE FROM department WHERE id = '" + id + "'",
+        "DELETE FROM department WHERE id ='" + id + "'",
         function (err, res) {
           if (err) {
             console.log(chalk.redBright("error deleting department"));
