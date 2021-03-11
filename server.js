@@ -60,12 +60,12 @@ const startApp = () => {
       case "Remove a Department":
         removeDept();
         break;
+      case "Update an Employee Manager":
+        updateManager();
+        break;
       case "View Employees by Manager":
         viewManager();
         break;
-      // case "Update an Employee Manager":
-      //   updateManager();
-      //   break;
     }
   });
 };
@@ -232,7 +232,7 @@ const removeEmployee = async () => {
       console.log(answers);
       id = answers.update;
       connection.query(
-        "DELETE FROM employee WHERE id = '" + id + "'",
+        "DELETE FROM employee WHERE id ="+ id + "",
         function (err, res) {
           if (err) {
             console.log(chalk.redBright("Error deleting employee"));
@@ -330,10 +330,10 @@ const removeRole = async () => {
       console.log(answers);
       let id = answers.deleteRole;
       connection.query(
-        "DELETE FROM role WHERE id = '" + id + "'",
+        "DELETE FROM role WHERE id ="+ id + "",
         function (err, res) {
           if (err) {
-            console.log(chalk.redBright("Error deleting the role"));
+            console.log(err);
           } else if (res) {
             console.log(chalk.magentaBright("You deleted the role!"));
           }
@@ -392,12 +392,12 @@ const removeDept = async () => {
       console.log(answers);
       let id = answers.deleteDept;
       connection.query(
-        "DELETE FROM department WHERE id ='" + id + "'",
+        "DELETE FROM department WHERE id = "+ id + "",
         function (err, res) {
           if (err) {
-            console.log(chalk.redBright("error deleting department"));
+            console.log(err);
           } else if (res) {
-            console.log(chalk.magentaBright("You deleted the department!"));
+            console.log(err);
           }
           startApp();
         }
@@ -450,3 +450,66 @@ const updateManager = async () => {
       );
     });
 };
+
+const viewManager = async () => {
+  const employee = await Employee.getAll();
+  console.log(employee);
+  let newEmployArray = [];
+  let managerArray = [];
+  for (let i = 0; i < employee.length; i++) {
+    newEmployArray.push({
+      id: employee[i].id,
+      firstName: employee[i].first_name,
+      lastname: employee[i].last_name,
+      managerID : employee[i].manager_id,
+      roleID : employee[i].role_id,
+    });
+  }
+  console.log(newEmployArray);
+
+  let manager_id = employee.manager_id;
+
+  for (let i = 0; i < employee.length; i++) {
+    if (manager_id != null) {
+    managerArray.push({
+      id: employee[i].id,
+      firstName: employee[i].first_name,
+      lastname: employee[i].last_name,
+      managerID : employee[i].manager_id,
+      roleID : employee[i].role_id,
+    });
+  }
+  }
+  console.log(managerArray);
+
+  inquirer
+    .prompt([
+      {
+        name: "managers",
+        type: "list",
+        message: "Which manager would you like to see?",
+        choices: managerArray,
+      },
+    ])
+    .then((answers) => {
+      // let id = answers.update;
+      // let manager_id = answers.newManager;
+      // connection.query(
+      //   "UPDATE employee SET manager_id = '" +
+      //     manager_id +
+      //     "' WHERE id = '" +
+      //     id +
+      //     "'",
+      //   function (err, res) {
+      //     if (err) {
+      //       console.log(chalk.redBright("error updating manager"));
+      //     } else if (res) {
+      //       console.log(chalk.magentaBright("You added a new manager to your employee"));
+      //     }
+      //     startApp();
+      //   }
+      // );
+      console.log(answers);
+    });
+  console.log(newEmployArray);
+}

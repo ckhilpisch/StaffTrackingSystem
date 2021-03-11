@@ -12,4 +12,9 @@ Department.create = () => {
    return connection.query("INSERT INTO employeetracker_db.department SET ?", 
 )};
 
+Department.delete = () => {
+  return connection.query("SELECT id FROM employeetracker_db.role")
+
+}
+
 module.exports = Department;

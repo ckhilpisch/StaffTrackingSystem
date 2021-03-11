@@ -13,7 +13,7 @@ Role.getAllUpdated = () => {
 };
 
 Role.delete = () => {
-  return connection.query("SELECT title, id FROM employeetracker_db.role")
+  return connection.query("SELECT id FROM employeetracker_db.role")
 
 }
 
