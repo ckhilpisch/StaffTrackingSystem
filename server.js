@@ -13,21 +13,20 @@ const CFonts = require('cfonts');
 const chalk = require('chalk');
 
 CFonts.say('STAFF STUFF', {
-  font: 'block',              // define the font face
-  align: 'left',              // define text alignment
-  colors: ['red','magentaBright'],         // define all colors
-  background: 'transparent',  // define the background color, you can also use `backgroundColor` here as key
-  letterSpacing: 1,           // define letter spacing
-  lineHeight: 1,              // define the line height
-  space: true,                // define if the output text should have empty lines on top and on the bottom
-  maxLength: '0',             // define how many character can be on one line
-  gradient: false,          // define your two gradient colors
-  independentGradient: false, // define if you want to recalculate the gradient for each new line
-  transitionGradient: true,  // define if this is a transition between colors directly
-  env: 'node'                 // define the environment CFonts is being executed in
+  font: 'block',              
+  align: 'left',           
+  colors: ['red','magentaBright'],         
+  background: 'transparent',  
+  letterSpacing: 1,           
+  lineHeight: 1,              
+  space: true,                
+  maxLength: '0',             
+  gradient: false,          
+  independentGradient: false, 
+  transitionGradient: true,  
+  env: 'node'                 
 });
 const startApp = () => {
-
   inquirer.prompt(questions.startAppQuestions).then((answer) => {
     switch (answer.general) {
       case "View Employees":
@@ -170,7 +169,6 @@ const updateRole = async () => {
       name: employees[i].first_name + " " + employees[i].last_name,
       value: employees[i].id,
     });
-    console.log(newEmployArray);
   }
   inquirer
     .prompt([
@@ -333,7 +331,7 @@ const removeRole = async () => {
         "DELETE FROM role WHERE id ="+ id + "",
         function (err, res) {
           if (err) {
-            console.log(err);
+            console.log(chalk.redBright("There was an error.  Role not deleted"));
           } else if (res) {
             console.log(chalk.magentaBright("You deleted the role!"));
           }
@@ -395,9 +393,9 @@ const removeDept = async () => {
         "DELETE FROM department WHERE id = "+ id + "",
         function (err, res) {
           if (err) {
-            console.log(err);
+            console.log(chalk.redBright("Error deleting department"));
           } else if (res) {
-            console.log(err);
+            console.log(chalk.magentaBright("You deleted the department!"));
           }
           startApp();
         }
@@ -413,7 +411,6 @@ const updateManager = async () => {
       name: employees[i].first_name + " " + employees[i].last_name,
       value: employees[i].id,
     });
-    console.log(newEmployArray);
   }
   inquirer
     .prompt([
