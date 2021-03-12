@@ -62,9 +62,9 @@ const startApp = () => {
       case "Update an Employee Manager":
         updateManager();
         break;
-      case "View Employees by Manager":
-        viewManager();
-        break;
+      // case "View Employees by Manager":
+      //   viewManager();
+      //   break;
     }
   });
 };
@@ -90,21 +90,6 @@ const viewRoles = async () => {
 
 const addEmployee = async () => {
   const role = await Role.getAllUpdated();
-  let newRoleArray = [];
-  for (let i = 0; i < role.length; i++) {
-    newRoleArray.push({
-      name: role[i].title,
-      value: role[i].id,
-    });
-  }
-  const employees = await Employee.getAllUpdated();
-  let newEmployArray = [];
-  for (let i = 0; i < employees.length; i++) {
-    newEmployArray.push({
-      name: employees[i].first_name + " " + employees[i].last_name,
-      value: employees[i].id,
-    });
-  }
   inquirer
     .prompt([
       {
@@ -121,7 +106,7 @@ const addEmployee = async () => {
         name: "newRole",
         type: "list",
         message: "What is the employees role?",
-        choices: newRoleArray,
+        choices: role,
       },
     ])
     .then((answers) => {
@@ -154,14 +139,6 @@ const addEmployee = async () => {
 };
 const updateRole = async () => {
   const role = await Role.getAllUpdated();
-  let newRoleArray = [];
-  for (let i = 0; i < role.length; i++) {
-    newRoleArray.push({
-      name: role[i].title,
-      value: role[i].id,
-    });
-  }
-
   const employees = await Employee.getAllUpdated();
   let newEmployArray = [];
   for (let i = 0; i < employees.length; i++) {
@@ -182,7 +159,7 @@ const updateRole = async () => {
         name: "newRole",
         type: "list",
         message: "What is the employee's new role?",
-        choices: newRoleArray,
+        choices: role,
       },
     ])
     .then((answers) => {
@@ -244,25 +221,7 @@ const removeEmployee = async () => {
 };
 
 const addRole = async () => {
-  const role = await Role.getAllUpdated();
-  let newRoleArray = [];
-  for (let i = 0; i < role.length; i++) {
-    newRoleArray.push({
-      name: role[i].title,
-      value: role[i].id,
-    });
-  }
-  console.log(newRoleArray);
-
   const department = await Department.getAll();
-  let newDeptArray = [];
-  for (let i = 0; i < department.length; i++) {
-    newDeptArray.push({
-      name: department[i].name,
-      value: department[i].id,
-    });
-  }
-  console.log(newDeptArray);
   inquirer
     .prompt([
       {
@@ -279,7 +238,7 @@ const addRole = async () => {
         name: "newDepart",
         type: "list",
         message: "What is the department of the new role?",
-        choices: newDeptArray,
+        choices: department,
       },
     ])
     .then((answers) => {
@@ -334,16 +293,6 @@ const removeRole = async () => {
     });
 };
 const addDept = async () => {
-  const department = await Department.getAll();
-  let newDeptArray = [];
-  for (let i = 0; i < department.length; i++) {
-    newDeptArray.push({
-      name: department[i].name,
-      value: department[i].id,
-    });
-  }
-  console.log(newDeptArray);
-
   inquirer.prompt(questions.addDeptQuestions).then((answers) => {
     let name = answers.newDept;
     connection.query(
@@ -363,20 +312,13 @@ const addDept = async () => {
 
 const removeDept = async () => {
   const department = await Department.getAll();
-  let newDeptArray = [];
-  for (let i = 0; i < department.length; i++) {
-    newDeptArray.push({
-      name: department[i].name,
-      value: department[i].id,
-    });
-  }
   inquirer
     .prompt([
       {
         name: "deleteDept",
         type: "list",
         message: "Which department would you like to delete?",
-        choices: newDeptArray,
+        choices: department,
       },
     ])
     .then((answers) => {
@@ -440,66 +382,3 @@ const updateManager = async () => {
       );
     });
 };
-
-const viewManager = async () => {
-  const employee = await Employee.getAll();
-  console.log(employee);
-  let newEmployArray = [];
-  let managerArray = [];
-  for (let i = 0; i < employee.length; i++) {
-    newEmployArray.push({
-      id: employee[i].id,
-      firstName: employee[i].first_name,
-      lastname: employee[i].last_name,
-      managerID : employee[i].manager_id,
-      roleID : employee[i].role_id,
-    });
-  }
-  console.log(newEmployArray);
-
-  let manager_id = employee.manager_id;
-
-  for (let i = 0; i < employee.length; i++) {
-    if (manager_id != null) {
-    managerArray.push({
-      id: employee[i].id,
-      firstName: employee[i].first_name,
-      lastname: employee[i].last_name,
-      managerID : employee[i].manager_id,
-      roleID : employee[i].role_id,
-    });
-  }
-  }
-  console.log(managerArray);
-
-  inquirer
-    .prompt([
-      {
-        name: "managers",
-        type: "list",
-        message: "Which manager would you like to see?",
-        choices: managerArray,
-      },
-    ])
-    .then((answers) => {
-      // let id = answers.update;
-      // let manager_id = answers.newManager;
-      // connection.query(
-      //   "UPDATE employee SET manager_id = '" +
-      //     manager_id +
-      //     "' WHERE id = '" +
-      //     id +
-      //     "'",
-      //   function (err, res) {
-      //     if (err) {
-      //       console.log(chalk.redBright("error updating manager"));
-      //     } else if (res) {
-      //       console.log(chalk.magentaBright("You added a new manager to your employee"));
-      //     }
-      //     startApp();
-      //   }
-      // );
-      console.log(answers);
-    });
-  console.log(newEmployArray);
-}

@@ -47,8 +47,11 @@ The user has options to do the following things with the database:
 <li>Update an Employee Manager</li>
 <li>View Employees by Manager</li>
 </ul>
-This is the completed site:
-![Card site](Develop/assets/Site.png)
+<br>
+
+### This is the launched terminal with some tables on it:
+
+![Terminal PNG](./assets/Staff3.png)
 <br>
 <br>
 

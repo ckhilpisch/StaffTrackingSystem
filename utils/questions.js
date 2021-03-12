@@ -45,7 +45,7 @@ const startAppQuestions = [
       "Add a Department",
       "Remove a Department",
       "Update an Employee Manager",
-      "View Employees by Manager",
+    //   "View Employees by Manager",
     ],
 }
 ];

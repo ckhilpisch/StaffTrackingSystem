@@ -5,7 +5,7 @@ const Department = function(department) {
 };
 
 Department.getAll =() => {
-    return connection.query("SELECT * FROM employeetracker_db.department")
+  return connection.query("SELECT id as value, name FROM employeetracker_db.department")
 };
 
 Department.create = () => {

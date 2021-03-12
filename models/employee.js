@@ -16,7 +16,8 @@ Employee.getAllUpdated = () => {
 
 Employee.create = () => {
   return connection.query(
-    "INSERT INTO employeetracker_db.employee SET ???");
+    "INSERT INTO employeetracker_db.employee SET ???",
+);
 };
 
 
