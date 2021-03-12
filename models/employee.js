@@ -14,11 +14,10 @@ Employee.getAllUpdated = () => {
   return connection.query("SELECT first_name, last_name, id FROM employeetracker_db.employee")
 };
 
-Employee.create = () => {
-  return connection.query(
-    "INSERT INTO employeetracker_db.employee SET ???",
-);
+Employee.getManagers = () => {
+  return connection.query("SELECT id as value, first_name, last_name, and manager_id !=null FROM employee")
 };
+
 
 
 Employee.remove = () => {

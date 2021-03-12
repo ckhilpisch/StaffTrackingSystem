@@ -129,7 +129,7 @@ const addEmployee = async () => {
               "You created a new employee named " +
                 first_name + " " +
                 last_name +
-                "!!!!"
+                "!!!! \n \n"
             ));
           }
           startApp();
@@ -163,19 +163,18 @@ const updateRole = async () => {
       },
     ])
     .then((answers) => {
-      console.log(answers);
       let employee = answers.update;
       let role = answers.newRole;
       connection.query(
-        "INSERT INTO employee (role_id) VALUES ('" +
+        "UPDATE employee SET role_id =" +
           role +
-          "')",
+          "  WHERE id = " + employee,
         function (err, res) {
           if (err) {
-            console.log(chalk.redBright("error changing role"));
+            console.log(err);
           } else if (res) {
             console.log(chalk.magentaBright(
-              "You updated your employees role!"
+              "You updated the role of your employee!\n \n"
             ));
           }
           startApp();
@@ -192,7 +191,6 @@ const removeEmployee = async () => {
       name: employees[i].first_name + " " + employees[i].last_name,
       value: employees[i].id,
     });
-    console.log(newEmployArray);
   }
   inquirer
     .prompt([
@@ -212,7 +210,7 @@ const removeEmployee = async () => {
           if (err) {
             console.log(chalk.redBright("Error deleting employee"));
           } else if (res) {
-            console.log(chalk.magentaBright("You deleted your employee!"));
+            console.log(chalk.magentaBright("You deleted your employee!\n \n"));
           }
           startApp();
         }
@@ -257,7 +255,7 @@ const addRole = async () => {
           if (err) {
             console.log(chalk.redBright("error creating role"));
           } else if (res) {
-            console.log(chalk.magentaBright("You created a new role named " + title + "!"));
+            console.log(chalk.magentaBright("You created a new role named " + title + "!\n \n"));
           }
           startApp();
         }
@@ -285,7 +283,7 @@ const removeRole = async () => {
           if (err) {
             console.log(chalk.redBright("There was an error.  Role not deleted"));
           } else if (res) {
-            console.log(chalk.magentaBright("You deleted the role!"));
+            console.log(chalk.magentaBright("You deleted the role!\n \n"));
           }
           startApp();
         }
@@ -302,7 +300,7 @@ const addDept = async () => {
         if (err) {
           console.log(chalk.redBright("Error creating new department"));
         } else if (res) {
-          console.log(chalk.magentaBright("You created a new department called " + name + "!"));
+          console.log(chalk.magentaBright("You created a new department called " + name + "!\n \n"));
         }
         startApp();
       }
@@ -330,7 +328,7 @@ const removeDept = async () => {
           if (err) {
             console.log(chalk.redBright("Error deleting department"));
           } else if (res) {
-            console.log(chalk.magentaBright("You deleted the department!"));
+            console.log(chalk.magentaBright("You deleted the department! \n \n"));
           }
           startApp();
         }
@@ -375,7 +373,7 @@ const updateManager = async () => {
           if (err) {
             console.log(chalk.redBright("error updating manager"));
           } else if (res) {
-            console.log(chalk.magentaBright("You added a new manager to your employee"));
+            console.log(chalk.magentaBright("You added a new manager to your employee!! \n \n"));
           }
           startApp();
         }

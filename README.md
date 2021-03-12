@@ -60,7 +60,8 @@ The user has options to do the following things with the database:
 ![staff GIF](./assets/staff.gif)
 ![staff GIF](./assets/staff2.gif)
 
-### Here is the Website Walk Through<a></a>
+### Here is the Website Walk Through:
+<a href =https://drive.google.com/file/d/1zRypT1GxY3Bh7hGvdlDi05RVMW15fqJJ/view>Walk Through Video</a>
 
 ## Testing:
 N/A
