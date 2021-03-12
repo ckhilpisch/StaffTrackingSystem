@@ -308,20 +308,13 @@ const addRole = async () => {
 
 const removeRole = async () => {
   const role = await Role.getAllUpdated();
-  let newRoleArray = [];
-  for (let i = 0; i < role.length; i++) {
-    newRoleArray.push({
-      name: role[i].title,
-      value: role[i].id,
-    });
-  }
   inquirer
     .prompt([
       {
         name: "deleteRole",
         type: "list",
         message: "Which role would you like to delete?",
-        choices: newRoleArray,
+        choices: role,
       },
     ])
     .then((answers) => {
